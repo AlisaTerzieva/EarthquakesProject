@@ -1,0 +1,4 @@
+.content {
+  height: 450px; /* assumed height, use an appropriate value */
+  overflow: scroll;
+}
