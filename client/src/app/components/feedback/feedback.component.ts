@@ -10,10 +10,13 @@ import { AuthService } from '../../core/services/authentication/auth.service'
   templateUrl: './feedback.component.html',
   styleUrls: ['./feedback.component.css']
 })
-export class FeedbackComponent {
+export class FeedbackComponent implements OnInit {
   public reportsData: Report[];
 
   constructor(private authService: AuthService, private reportService: ReportService, private earthquakeService: EarthquakeService, private toastr: ToastsManager) {
+  }
+
+  ngOnInit() {
     this.reportService.getLast30()
       .subscribe(reportData => {
         this.reportsData = reportData
@@ -21,4 +24,5 @@ export class FeedbackComponent {
         this.toastr.error('Fetching report data failed!', 'Error', { dismiss: 'controlled', showCloseButton: true })
       })
   }
+
 }

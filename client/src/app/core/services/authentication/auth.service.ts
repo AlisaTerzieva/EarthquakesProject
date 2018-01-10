@@ -8,17 +8,17 @@ import { Router } from '@angular/router';
 import { HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
-const appKey = "your_key";
-const appSecret = "your_secret";
+const appKey = "kid_HJjpLj-EG";
+const appSecret = "760f799cff4748bc81163412075e7fdb";
 const registerUrl = `https://baas.kinvey.com/user/${appKey}`;
 const loginUrl = `https://baas.kinvey.com/user/${appKey}/login`;
 const logoutUrl = `https://baas.kinvey.com/user/${appKey}/_logout`
 
 @Injectable()
 export class AuthService {
-  private currentAuthtoken: string;
+  private currentAuthtoken: string = localStorage.getItem('authtoken');
   public redirectUrl: string;
-  public isAdmin: boolean = false;
+  public isAdmin: boolean;
 
   constructor(
     private httpService: HttpClientService,

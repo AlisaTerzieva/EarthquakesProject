@@ -3,6 +3,7 @@ import { Earthquake } from "../../core/models/earthquake.model";
 import { EarthquakeService } from '../../core/services/earthquakes/earthquake.service';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import { Observable } from "rxjs/Observable";
+import { OnInit } from "@angular/core/src/metadata/lifecycle_hooks";
 
 // This is necessary to access ol3!
 declare var ol: any;
@@ -10,11 +11,11 @@ declare var ol: any;
 @Component({
   selector: 'earthquakes-map',
   styleUrls: ['./overview.component.css'],
-  templateUrl:'./overview.component.html',
+  templateUrl: './overview.component.html',
   // The "#" (template reference variable) matters to access the map element with the ViewChild decorator!
 })
 
-export class OverviewComponent implements AfterViewInit {
+export class OverviewComponent implements AfterViewInit, OnInit {
   // This is necessary to access the html element to set the map target (after view init)!
   @ViewChild("mapElement") mapElement: ElementRef;
   public earthquakesData: Earthquake[];
@@ -22,6 +23,9 @@ export class OverviewComponent implements AfterViewInit {
   map: any;
 
   constructor(private earthquakeService: EarthquakeService, private toastr: ToastsManager) {
+  }
+
+  ngOnInit() {
     this.earthquakeService.getLast50()
       .subscribe(data => {
         this.toastr.success('Loading data success!', 'Success', { dismiss: 'controlled', showCloseButton: true })
@@ -79,13 +83,11 @@ export class OverviewComponent implements AfterViewInit {
           depth: earthquake.depth,
           magnType: earthquake.magnType,
           magnitude: earthquake.magnitude,
-          radius: earthquake.radius,
           region: earthquake.region,
         });
-
         var iconStyleHeavy = new ol.style.Style({
           image: new ol.style.Circle({
-            radius: earthquake.radius,
+            radius: 5 + 20 / (Number(earthquake.depth) + 2),
             fill: new ol.style.Fill({
               color: [255, 0, 0, 1]
             }),
@@ -97,7 +99,43 @@ export class OverviewComponent implements AfterViewInit {
           zIndex: 1
         });
 
-        iconFeature.setStyle(iconStyleHeavy)
+        var iconStyleMed = new ol.style.Style({
+          image: new ol.style.Circle({
+            radius: 5 + 20 / (Number(earthquake.depth) + 2),
+            fill: new ol.style.Fill({
+              color: [255, 153, 0, 1]
+            }),
+            stroke: new ol.style.Stroke({
+              color: [255, 0, 0, 1],
+              width: 1
+            })
+          }),
+          zIndex: 1
+        });
+        var iconStyleLow = new ol.style.Style({
+          image: new ol.style.Circle({
+            radius: 5 + 20 / (Number(earthquake.depth) + 2),
+            fill: new ol.style.Fill({
+              color: [255, 255, 0, 1]
+            }),
+            stroke: new ol.style.Stroke({
+              color: [255, 0, 0, 1],
+              width: 1
+            })
+          }),
+          zIndex: 1
+        });
+
+        if (earthquake.magnitude < 3) {
+          iconFeature.setStyle(iconStyleLow);
+        }
+        else if (earthquake.magnitude < 5) {
+          iconFeature.setStyle(iconStyleMed);
+        }
+        else {
+          iconFeature.setStyle(iconStyleHeavy);
+        }
+        iconFeature.setId(earthquake.id);
 
         earthquakes.push(iconFeature)
       }
@@ -113,44 +151,13 @@ export class OverviewComponent implements AfterViewInit {
     }
 
   }
-
   // After view init the map target can be set!
   ngAfterViewInit() {
     this.map.setTarget(this.mapElement.nativeElement.id);
   }
+
 }
 
-// function openSidebar() {
-//   $("#mySidenav").css("width", "250px");
-//   $("#main").css("marginLeft", "250px");
-// }
-
-// function closeSidebar(){
-//   $("#mySidenav").css("width", "0px");
-//   $("#main").css("marginLeft", "0px");
-// }
-
-// $('#open').click(function () {
-//  openSidebar();
-// })
-
-// $('.closebtn').click(function () {
-//   closeSidebar();
-// })
-
-//   
-//   if (point.magnitude < 3) {
-//       iconFeature.setStyle(iconStyleLow);
-//   }
-//   else if(point.magnitude < 5){
-//       iconFeature.setStyle(iconStyleMed);
-//   }
-//   else
-//   iconFeature.setStyle(iconStyleHeavy);
-
-//   iconFeature.setId(point.id);
-//   icons.push(iconFeature);
-// }
 
 // var view = new ol.View({
 //   center: ol.proj.transform([0, 10], 'EPSG:4326', 'EPSG:3857'),

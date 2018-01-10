@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var uri = 'mongodb://{your_username}:{your_password}@ds059546.mlab.com:59546/earthquakes';
+var uri = 'mongodb://numenesse:4302@ds059546.mlab.com:59546/earthquakes';
 
 var options = {
   "server": {

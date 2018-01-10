@@ -4,7 +4,7 @@
   <mat-card-subtitle>Strength: {{report.strength}}</mat-card-subtitle>
   <mat-card-content>{{report.text}}</mat-card-content>
   <mat-card-actions *ngIf="authService.isAdmin">
-    <button (click)="EditReport()" mat-button-raised>Edit</button>
-    <button (click)="DeleteReport()" mat-button-raised>Delete</button>
+    <button (click)="EditReport()" mat-button>Edit</button>
+    <button (click)="DeleteReport()" mat-button>Delete</button>
   </mat-card-actions>
 </mat-card>

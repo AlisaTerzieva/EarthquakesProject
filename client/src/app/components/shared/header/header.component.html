@@ -1,6 +1,6 @@
 <mat-toolbar role="header" color="accent">
   <div class="header-div">
-    <button mat-button routerLink="/overview">Earthquakes Overview</button>
+    <button mat-button routerLink="/overview">Earthquakes Overview</button> 
     <button *ngIf="!authService.isLoggedIn()" mat-button routerLink="/login">Login</button>
     <button *ngIf="!authService.isLoggedIn()" mat-button routerLink="/register">Register</button>
     <button *ngIf="authService.isLoggedIn()" mat-button routerLink="/feedback">Did you experience an earthquake?</button>

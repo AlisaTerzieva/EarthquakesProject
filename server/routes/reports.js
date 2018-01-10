@@ -12,4 +12,12 @@ router.get('/', function (req, res, next) {
   });
 });
 
+router.post('/:id', function (req, res, next) {
+  var query = Report.find({}).limit(30);
+  query.exec((err, docs) => {
+    res.set('Content-Type', 'application/json');
+    res.send(docs);
+  });
+});
+
 module.exports = router;
